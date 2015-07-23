@@ -216,7 +216,7 @@
                 return select_branch(branch);
               }
             };
-            
+
             /* sorting methods */
             scope.sortBy = function (col) {
             	if (col.sortDirection === "asc") {
@@ -224,35 +224,35 @@
             	   col.sortDirection = "desc";
        	           col.sortingIcon = attrs.sortedDesc;
             	} else {
-            	   scope.treeData.sort(sort_by(col.field, false, col.sortingType));            		
+            	   scope.treeData.sort(sort_by(col.field, false, col.sortingType));
              	   col.sortDirection = "asc";
-        	       col.sortingIcon = attrs.sortedAsc;	
+        	       col.sortingIcon = attrs.sortedAsc;
             	}
           	    col.sorted = true;
-                resetSorting(col);              
-              };       
+                resetSorting(col);
+              };
 
             var sort_by = function(field, descending, sortingType){
                var key = sortingType === "number" ? function(x) {return parseFloat(x[field])} : function(x) {return (x[field] === null ? "" : x[field].toLowerCase())};
                var direction = !descending ? 1 : -1;
                return function (a, b) {
                    return a = key(a), b = key(b), direction * ((a > b) - (b > a));
-               }; 
-            }            
-            
+               };
+            };
+
             var resetSorting = function(sortedCol) {
             	var arraySize = scope.colDefinitions.length;
             	for (var i= 0;i<arraySize;i++) {
             		var col = scope.colDefinitions[i];
             		if (col.field != sortedCol.field) {
             			col.sorted = false;
-                		col.sortDirection = "none";	
+                		col.sortDirection = "none";
             		}
             	}
-            }
-              
+            };
+
             /* end of sorting methods */
-            
+
             get_parent = function (child) {
               var parent;
               parent = void 0;
@@ -337,7 +337,7 @@
                 if (branch.expanded == null) {
                   branch.expanded = false;
                 }
-                if (!branch.children || branch.children.length === 0) {
+                if (!branch.folder) {
                   tree_icon = attrs.iconLeaf;
                 } else {
                   if (branch.expanded) {
@@ -648,12 +648,12 @@
         };
       };
     })
-  
+
   .filter('searchFor', function() {
 		return function(arr, filterString, expandingProperty, colDefinitions) {
 			var filtered = [];
 			//only apply filter for strings 3 characters long or more
-		   if (!filterString || filterString.length < 3) {		     
+		   if (!filterString || filterString.length < 3) {
 			   for (var i = 0; i < arr.length; i++) {
 		              var item = arr[i];
 		              if (item.visible) {
@@ -677,14 +677,14 @@
                 		if(ancestor.visible){
                 			filtered.push(ancestor);
                 		}
-                	} 
+                	}
                     ancestorStack = [];
                  }
               }
 		   }
            return filtered;
 		};
-		
+
 		function include(item, filterString, expandingProperty, colDefinitions){
 			var includeItem = false;
 			var filterApplied = false;
@@ -704,15 +704,15 @@
     			    if(checkItem(item, filterString, col)) {
     			    	includeItem = true;
     			    }
-    			}        		
+    			}
         	}
 			if (filterApplied) {
 			    return includeItem;
 			} else {
 				return true;
-			}			
+			}
 		}
-		
+
 		function checkItem(item, filterString, col) {
 			if (col.sortingType === "number") {
 				if (item.branch[col.field] != null
